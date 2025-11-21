@@ -1,0 +1,74 @@
+<!--pages/currency-exchange/currency-exchange.wxml-->
+<view class="container">
+  <view class="header">
+    <image src="/static/icons/exchange.png" class="header-icon" mode="aspectFit"></image>
+    <text class="header-title">货币换算</text>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{isLoadingCurrencies}}" class="loading-container">
+    <text>正在加载货币列表...</text>
+  </view>
+
+  <!-- 加载错误 -->
+  <view wx:if="{{!isLoadingCurrencies && errorLoadingCurrencies}}" class="error-container">
+    <text class="error-text">{{errorLoadingCurrencies}}</text>
+    <button class="retry-button" bindtap="loadCurrencies">点击重试</button>
+  </view>
+
+  <!-- 主体内容 (货币列表加载成功后显示) -->
+  <block wx:if="{{!isLoadingCurrencies && !errorLoadingCurrencies}}">
+    <view class="converter-section">
+      <!-- 金额输入 -->
+      <view class="input-group">
+        <text class="label">金额:</text>
+        <input type="digit" class="input-amount" placeholder="输入金额" value="{{amount}}" bindinput="bindAmountInput" />
+      </view>
+
+      <!-- 货币选择 -->
+      <view class="currency-selector">
+        <picker class="currency-picker" bindchange="bindSourceCurrencyChange" value="{{sourceCurrencyIndex}}" range="{{sourceCurrencies}}" range-key="name">
+          <view class="picker-display">
+            <text>{{sourceCurrencies[sourceCurrencyIndex].name}} ({{sourceCurrencies[sourceCurrencyIndex].code}})</text>
+            <image src="/static/icons/downselect.png" class="dropdown-arrow" mode="aspectFit"></image>
+          </view>
+        </picker>
+
+        <image src="/static/icons/exchange.png" class="swap-icon" mode="aspectFit" bindtap="swapCurrencies"></image>
+
+        <picker class="currency-picker" bindchange="bindTargetCurrencyChange" value="{{targetCurrencyIndex}}" range="{{targetCurrencies}}" range-key="name">
+          <view class="picker-display">
+            <text>{{targetCurrencies[targetCurrencyIndex].name}} ({{targetCurrencies[targetCurrencyIndex].code}})</text>
+            <image src="/static/icons/downselect.png" class="dropdown-arrow" mode="aspectFit"></image>
+          </view>
+        </picker>
+      </view>
+
+      <button class="convert-button" bindtap="convertCurrency" disabled="{{sourceCurrencies.length < 1}}">立即换算</button>
+    </view>
+
+    <!-- 转换错误信息 -->
+    <view wx:if="{{conversionError}}" class="conversion-error-container">
+        <text class="error-text">{{conversionError}}</text>
+    </view>
+
+    <!-- 结果显示 -->
+    <view wx:if="{{convertedAmount !== null}}" class="result-section">
+      <text class="result-title">换算结果</text>
+      <view class="result-line">
+        <text class="result-label">{{amount}} {{fromCurrencyCode}} = </text>
+        <text class="result-value">{{convertedAmount}} {{toCurrencyCode}}</text>
+      </view>
+      <view class="result-detail">
+        <text>当前汇率: 1 {{fromCurrencyCode}} ≈ {{exchangeRate}} {{toCurrencyCode}}</text>
+      </view>
+      <view class="result-detail" wx:if="{{rateTimestamp && rateTimestamp !== 'N/A'}}">
+        <text>汇率更新时间: {{rateTimestamp}}</text>
+      </view>
+    </view>
+
+    <view class="footer-note">
+      <text>汇率数据仅供参考，实际交易以银行柜台为准。</text>
+    </view>
+  </block>
+</view>

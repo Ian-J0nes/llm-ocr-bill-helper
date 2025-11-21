@@ -1,0 +1,17 @@
+<view class="container">
+  <view class="avatar-section">
+    <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+      <image class="avatar" src="{{avatarUrl}}"></image>
+    </button>
+    <text class="avatar-tip">点击选择头像</text>
+  </view>
+
+  <form bindsubmit="onLogin" class="login-form">
+    <view class="nickname-section">
+      <!-- <label class="label">昵称</label> -->
+      <input name="nickname" type="nickname" class="weui-input" placeholder="请输入昵称" bindinput="onNicknameInput" value="{{nickName}}" />
+    </view>
+
+    <button form-type="submit" type="primary" class="login-btn" disabled="{{loginDisabled}}">登录</button>
+  </form>
+</view>

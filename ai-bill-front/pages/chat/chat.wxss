@@ -1,0 +1,341 @@
+/* page全局样式 */
+page {
+    height: 100vh;
+    background-color: #f5f5f5; /* 默认页面背景 */
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  }
+  
+  /* 页面主容器 */
+  .page-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* 初始状态 specific styles */
+  .page-container.initial-state {
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+  }
+  
+  .initial-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 600rpx;
+    transform: translateY(-60rpx); /* 调整垂直居中效果 */
+  }
+  
+  .initial-avatar {
+    width: 160rpx;
+    height: 160rpx;
+    margin-bottom: 30rpx;
+    border-radius: 50%; /* 如果头像是圆的 */
+  }
+  
+  .initial-prompt {
+    text-align: center;
+    margin-bottom: 50rpx;
+  }
+  
+  .prompt-title {
+    display: block;
+    font-size: 40rpx;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 10rpx;
+  }
+  
+  .prompt-subtitle {
+    display: block;
+    font-size: 28rpx;
+    color: #666666;
+    line-height: 1.5;
+  }
+  
+  .initial-input-area-wrapper {
+    width: 100%;
+    position: relative;  
+  }
+  
+  .shared-input-area {
+    display: flex;
+    align-items: flex-end;
+    background-color: #f7f7f7;
+    border-radius: 18rpx;
+    padding: 10rpx 10rpx 10rpx 20rpx;  
+    box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.08);
+    position: relative;
+  }
+  
+  .shared-message-input {
+    flex: 1;
+    min-height: 70rpx; /* 调整以匹配按钮大小 */
+    max-height: 200rpx; 
+    padding: 15rpx 10rpx;
+    font-size: 30rpx;
+    line-height: 1.4;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 180rpx;
+  }
+  
+  .shared-input-buttons {
+    position: absolute;
+    right: 20rpx;
+    bottom: 18rpx; /* 调整以更好地对齐 textarea */
+    display: flex;
+    align-items: center;
+  }
+  
+  .shared-upload-btn,
+  .shared-send-btn {
+    width: 50rpx;
+    height: 50rpx;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .shared-upload-btn {
+    margin-right: 20rpx;
+  }
+  
+  
+  /* Chat state specific styles */
+  .page-container.chat-state {
+    background-color: #f0f2f5; /* 淡一点的背景色 */
+  }
+  
+  .chat-list {
+    flex: 1;
+    padding: 20rpx 30rpx;
+    box-sizing: border-box;
+    background-color: #f0f2f5; /* 聊天列表背景 */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* iOS 滚动优化 */
+  }
+  
+  .scroll-view-bottom-padding {
+    /* 确保输入框不遮挡最后一条消息。这个高度需要根据实际输入区域和tabbar高度来灵活调整 */
+    /* (估算的输入区域内容高度 + tabBar高度 + 安全区底部内边距) */
+    /* 120rpx 是对输入框内容区域（输入框本身+其上下padding）的一个估算值 */
+    height: calc(120rpx + 50px + env(safe-area-inset-bottom)); 
+  }
+  
+  .message-item-wrapper { /* 新增，用于未来可能添加头像等布局 */
+    display: flex;
+    margin-bottom: 30rpx;
+  }
+  
+  .user-message .message-item-wrapper {
+    justify-content: flex-end;
+  }
+  .system-message .message-item-wrapper {
+    justify-content: flex-start;
+  }
+  
+  .message-item {
+    display: flex; /* message-item 现在是内部容器 */
+    flex-direction: column;
+    max-width: 80%; /* 限制消息最大宽度，避免头像和消息内容太挤 */
+  }
+  
+  .user-message { /* 应用于 .message-item */
+    align-items: flex-end; 
+    margin-left: auto; /* 用户消息靠右 */
+  }
+  
+  .system-message { /* 应用于 .message-item */
+    align-items: flex-start;
+    margin-right: auto; /* 系统消息靠左 */
+  }
+  
+  .message-content {
+    max-width: 100%; /* message-content 现在是100% of message-item */
+    border-radius: 18rpx;
+    padding: 20rpx;
+    word-break: break-all;
+    box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+    position: relative;
+    font-size: 30rpx;
+    line-height: 1.5;
+  }
+  
+  .user-message .message-content {
+    background-color: #FFD700; /* 更鲜明的黄色 */
+    color: #333; /* 深色文字，对比度更好 */
+    border-bottom-right-radius: 4rpx;
+  }
+  
+  .system-message .message-content {
+    background-color: #ffffff;
+    color: #333;
+    border-bottom-left-radius: 4rpx;
+  }
+  
+  .message-image {
+    width: 100%; /* 相对于 message-content */
+    max-width: 400rpx; /* 图片最大显示宽度 */
+    min-width: 150rpx; /* 图片最小显示宽度，避免过小 */
+    border-radius: 12rpx;
+    display: block;
+    margin-top: 10rpx;
+    background-color: #e9e9e9; /* 图片加载时的占位背景 */
+  }
+  .message-content > text + .message-image, /* 文本后紧跟图片 */
+  .message-image + text { /* 图片后紧跟文本 */
+    margin-top: 10rpx;
+  }
+  
+  
+  /* 账单表单样式 */
+  .bill-form-container {
+    padding: 5rpx 0; /* 内部微调 */
+  }
+  .bill-form-title {
+    font-size: 30rpx;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15rpx;
+    padding-bottom: 10rpx;
+    border-bottom: 1px solid #eee;
+  }
+  .bill-field {
+    display: flex;
+    margin-bottom: 10rpx;
+    font-size: 28rpx;
+    line-height: 1.6;
+  }
+  .bill-label {
+    color: #555;
+    margin-right: 10rpx;
+    flex-shrink: 0; /* 防止标签被压缩 */
+    font-weight: 500;
+  }
+  .bill-value {
+    color: #333;
+    word-break: break-all;
+    flex-grow: 1;
+  }
+  .bill-value.amount {
+    font-weight: bold;
+    color: #e53935; /* 金额用红色突出 */
+  }
+  .system-message .bill-value.amount { /* 系统消息如果是支出，也可以是绿色或黑色 */
+      color: #1e8e3e; /* 例如绿色代表收入/正值 */
+  }
+  /* 如果金额为负，可以在js中判断并添加class来改变颜色 */
+  .bill-value.negative-amount {
+      color: #e53935; /* 红色代表支出/负值 */
+  }
+  .bill-sub-item {
+    display: block;
+    font-size: 26rpx;
+    color: #666;
+    margin-left: 15rpx;
+  }
+  
+  
+  .loading-dots text {
+    animation: blink 1.4s infinite both;
+    font-size: 36rpx;
+    font-weight: bold;
+  }
+  .loading-dots text:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .loading-dots text:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  @keyframes blink {
+    0% { opacity: 0.2; }
+    20% { opacity: 1; }
+    100% { opacity: 0.2; }
+  }
+  
+  .upload-status {
+    font-size: 24rpx;
+    color: #999;
+    margin-top: 8rpx;
+    text-align: right; /* 用户消息的状态靠右 */
+  }
+  .system-message .upload-status { /* 虽然系统消息没有upload status，但错误消息可以复用 */
+    text-align: left;
+  }
+  .upload-status.error {
+    color: #fa5151;
+  }
+  
+  /* Wrapper for the input area in chat state (fixed to bottom) */
+  .chat-input-area-wrapper {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;  
+    z-index: 1000;  
+    background-color: #f0f2f5; /* 与聊天列表背景一致，或用 #f7f7f7 等浅灰色 */
+    /* 关键修复：确保 padding-bottom 包含 tabBar 高度和安全区域 */
+    padding-bottom: calc(50px + env(safe-area-inset-bottom)); /* 50px 是 tabBar 的一个估算高度 */
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 20rpx;  
+    padding-right: 20rpx;
+    padding-top: 15rpx; /* 输入框区域上方的间距 */
+    border-top: 1rpx solid #e0e0e0; /* 细微的分割线，增加层次感 */
+  }
+  
+  .chat-input-area-wrapper .shared-message-input {
+    max-height: 250rpx; /* 聊天状态下输入框可略高 */
+  }
+  
+  /* 如果你使用了头像 */
+  .avatar {
+    width: 80rpx;
+    height: 80rpx;
+    border-radius: 50%;
+    margin-right: 15rpx; /* 系统头像在右 */
+  }
+  .user-message .message-item-wrapper { /* 如果用户头像在右边 */
+    /* flex-direction: row-reverse; */
+  }
+  .user-avatar {
+     /* margin-left: 15rpx; 
+     margin-right: 0; */
+  }
+
+  .save-btn {
+    background-color: #07c160;
+    color: white;
+  }
+
+  .confirm-btn {
+    background-color: #07c160;
+    color: white;
+  }
+
+  .edit-btn {
+    background-color: #4a90e2;
+    color: white;
+  }
+
+  .cancel-btn {
+    background-color: #999;
+    color: white;
+  }
+
+  .saved-status {
+    color: #07c160;
+    font-size: 14px;
+    display: inline-block;
+    padding: 8px 0;
+    margin-left: 10px;
+    font-weight: bold;
+  }

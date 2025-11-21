@@ -1,0 +1,210 @@
+<view class="page-container {{messages.length === 0 ? 'initial-state' : 'chat-state'}}">
+  <!-- Initial View: When no messages -->
+  <view wx:if="{{messages.length === 0}}" class="initial-view">
+    <view class="initial-prompt">
+      <image class="initial-avatar" src="/static/icons/xiaomie_avatar.png" mode="aspectFit"></image>
+      <text class="prompt-title">你好{{userInfo.nickName || '朋友'}}，我是小咩！</text>
+      <text class="prompt-subtitle">可以发送文字与我聊天，或者上传账单图片让我识别哦~</text>
+    </view>
+    <view class="initial-input-area-wrapper">
+      <view class="shared-input-area">
+        <textarea class="shared-message-input"
+                  value="{{inputMessage}}"
+                  bindinput="onInputChange"
+                  placeholder="请输入消息或选择图片..."
+                  auto-height
+                  maxlength="-1"
+                  show-confirm-bar="{{false}}"
+                  cursor-spacing="20"
+                  />
+        <view class="shared-input-buttons">
+          <image class="shared-upload-btn" src="/static/icons/uploadbutton.png" mode="aspectFit" bindtap="chooseImageAndSend"/>
+          <image class="shared-send-btn" src="/static/icons/arrow.png" mode="aspectFit" bindtap="sendTextMessage"/>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Chat View: When there are messages -->
+  <block wx:else>
+    <scroll-view scroll-y="true" class="chat-list" scroll-into-view="{{scrollToMessageId}}" scroll-with-animation="true">
+      <block wx:for="{{messages}}" wx:key="id" wx:for-item="item" wx:for-index="index">
+        <view id="{{item.id}}" class="message-item-wrapper">
+          <view class="message-item {{item.type === 'user' ? 'user-message' : 'system-message'}}">
+            <!-- Avatar (Optional, add if you have avatars per message type) -->
+            <!-- 
+            <image wx:if="{{item.type === 'user'}}" class="message-avatar user-avatar" src="{{userInfo.avatarUrl}}"></image>
+            <image wx:if="{{item.type === 'system'}}" class="message-avatar system-avatar" src="/static/icons/xiaomie_avatar.png"></image>
+            -->
+            <view class="message-content-container">
+              <view class="message-content">
+                <!-- Plain Text Content -->
+                <text wx:if="{{item.isText && !item.isBill && item.content}}">{{item.content}}</text>
+                
+                <!-- User Image -->
+                <image wx:if="{{item.type === 'user' && (item.localImagePath || item.imageUrl) && !item.error}}" 
+                       class="message-image" 
+                       src="{{item.uploading && item.localImagePath ? item.localImagePath : (item.imageUrl || item.localImagePath)}}" 
+                       mode="widthFix" 
+                       bindtap="previewImage" 
+                       data-url="{{item.imageUrl || item.localImagePath}}"/>
+                
+                <!-- System Image (e.g., if AI sends an image not related to bill) -->
+                <image wx:if="{{item.type === 'system' && !item.isBill && item.imageUrl}}" class="message-image" src="{{item.imageUrl}}" mode="widthFix" bindtap="previewImage" data-url="{{item.imageUrl}}"></image>
+                
+                <!-- Bill Form / Display -->
+                <view wx:if="{{item.type === 'system' && item.isBill && item.billData}}">
+                  <view class="bill-form-container">
+                    <view class="bill-form-title">账单详情 🐑</view>
+
+                    <!-- Editing State: Input Fields -->
+                    <block wx:if="{{item.isEditing}}">
+                      <view class="bill-field">
+                        <text class="bill-label">名称<text class="required-star">*</text>：</text>
+                        <input class="bill-input" value="{{item.billDataEditable.name}}" bindinput="handleBillInputChange" data-field="name" data-index="{{index}}" placeholder="如：晚餐、购物"/>
+                      </view>
+                      <view class="bill-field">
+                        <text class="bill-label">交易类型<text class="required-star">*</text>：</text>
+                        <picker mode="selector" range="{{transactionTypeOptions}}" range-key="name" value="{{transactionTypeOptions_value_map[item.billDataEditable.transactionType] || 0}}" bindchange="handleTransactionTypeChange" data-index="{{index}}">
+                            <view class="bill-input picker-input">{{item.billDataEditable.transactionType ? (transactionTypeOptions_value_map[item.billDataEditable.transactionType] !== undefined ? transactionTypeOptions[transactionTypeOptions_value_map[item.billDataEditable.transactionType]].name : '请选择') : '请选择交易类型'}}</view>
+                        </picker>
+                      </view>
+                      <view class="bill-field">
+                        <text class="bill-label">账单分类<text class="required-star">*</text>：</text>
+                        <picker mode="selector" range="{{billTypeOptions}}" value="{{billTypeOptions_value_map[item.billDataEditable.billType] || 0}}" bindchange="handleBillTypeChange" data-index="{{index}}">
+                           <view class="bill-input picker-input">{{item.billDataEditable.billType || '请选择账单分类'}}</view>
+                        </picker>
+                      </view>
+                      <view class="bill-field">
+                        <text class="bill-label">金额<text class="required-star">*</text>：</text>
+                        <input class="bill-input amount" type="digit" value="{{item.billDataEditable.totalAmount}}" bindinput="handleBillInputChange" data-field="totalAmount" data-index="{{index}}" placeholder="0.00"/>
+                      </view>
+                       <view class="bill-field">
+                        <text class="bill-label">日期<text class="required-star">*</text>：</text>
+                        <picker mode="date" value="{{item.billDataEditable.issueDate}}" bindchange="handleBillDateChange" data-index="{{index}}">
+                          <view class="bill-input picker-input">{{item.billDataEditable.issueDate_display || item.billDataEditable.issueDate || '请选择日期'}}</view>
+                        </picker>
+                      </view>
+                      <view class="bill-field">
+                        <text class="bill-label">商家/来源：</text>
+                        <input class="bill-input" value="{{item.billDataEditable.supplierName}}" bindinput="handleBillInputChange" data-field="supplierName" data-index="{{index}}" placeholder="如：海底捞、支付宝"/>
+                      </view>
+                      <view class="bill-field">
+                        <text class="bill-label">货币：</text>
+                        <input class="bill-input" value="{{item.billDataEditable.currencyCode || 'CNY'}}" bindinput="handleBillInputChange" data-field="currencyCode" data-index="{{index}}" placeholder="CNY"/>
+                      </view>
+                      <view class="bill-field">
+                        <text class="bill-label">发票号：</text>
+                        <input class="bill-input" value="{{item.billDataEditable.invoiceNumber}}" bindinput="handleBillInputChange" data-field="invoiceNumber" data-index="{{index}}" placeholder="可选"/>
+                      </view>
+                      <view class="bill-field">
+                        <text class="bill-label">税额：</text>
+                        <input class="bill-input" type="digit" value="{{item.billDataEditable.taxAmount}}" bindinput="handleBillInputChange" data-field="taxAmount" data-index="{{index}}" placeholder="可选, 0.00"/>
+                      </view>
+                      <view class="bill-field notes-field">
+                        <text class="bill-label">备注：</text>
+                        <textarea class="bill-textarea" value="{{item.billDataEditable.notes}}" bindinput="handleBillInputChange" data-field="notes" data-index="{{index}}" auto-height placeholder="可选, 如：团队聚餐"/>
+                      </view>
+                    </block>
+
+                    <!-- Non-Editing State: Text Display -->
+                    <block wx:else>
+                      <view class="bill-field" wx:if="{{item.billData.name}}">
+                        <text class="bill-label">名称：</text>
+                        <text class="bill-value">{{item.billData.name}}</text>
+                      </view>
+                      <view class="bill-field" wx:if="{{item.billData.transactionType}}">
+                        <text class="bill-label">交易类型：</text>
+                        <text class="bill-value {{item.billData.transactionType === 'income' ? 'income-text' : 'expense-text'}}">{{item.billData.transactionType === 'income' ? '收入' : '支出'}}</text>
+                      </view>
+                      <view class="bill-field" wx:if="{{item.billData.billType}}">
+                        <text class="bill-label">账单分类：</text>
+                        <text class="bill-value">{{item.billData.billType}}</text>
+                      </view>
+                      <view class="bill-field">
+                        <text class="bill-label">金额：</text>
+                        <text class="bill-value amount {{item.billData.transactionType === 'income' ? 'income-text' : 'expense-text'}}">{{item.billData.transactionType === 'income' ? '+' : '-'}}{{item.billData.totalAmount_display || item.billData.totalAmount}} {{item.billData.currencyCode || 'CNY'}}</text>
+                      </view>
+                      <view class="bill-field" wx:if="{{item.billData.issueDate_display || item.billData.issueDate}}">
+                        <text class="bill-label">日期：</text>
+                        <text class="bill-value">{{item.billData.issueDate_display || item.billData.issueDate}}</text>
+                      </view>
+                      <view class="bill-field" wx:if="{{item.billData.supplierName}}">
+                        <text class="bill-label">商家/来源：</text>
+                        <text class="bill-value">{{item.billData.supplierName}}</text>
+                      </view>
+                      <view class="bill-field" wx:if="{{item.billData.invoiceNumber}}">
+                        <text class="bill-label">发票号：</text>
+                        <text class="bill-value">{{item.billData.invoiceNumber}}</text>
+                      </view>
+                      <view class="bill-field" wx:if="{{item.billData.taxAmount_display || (item.billData.taxAmount !== null && item.billData.taxAmount !== undefined) }}">
+                        <text class="bill-label">税额：</text>
+                        <text class="bill-value">{{item.billData.taxAmount_display || item.billData.taxAmount}} {{item.billData.currencyCode || 'CNY'}}</text>
+                      </view>
+                      <view class="bill-field" wx:if="{{item.billData.items && item.billData.items.length > 0}}">
+                        <text class="bill-label">明细：</text>
+                        <block wx:for="{{item.billData.items}}" wx:for-item="subItem" wx:key="index">
+                          <text class="bill-value bill-sub-item">- {{subItem.itemName || '项目'}} ({{subItem.itemPrice_display || subItem.itemPrice}})</text>
+                        </block>
+                      </view>
+                      <view class="bill-field" wx:if="{{item.billData.notes}}">
+                        <text class="bill-label">备注：</text>
+                        <text class="bill-value notes-value">{{item.billData.notes}}</text>
+                      </view>
+                    </block>
+
+                    <!-- Action Buttons -->
+                    <view class="bill-actions">
+                      <block wx:if="{{item.isEditing}}">
+                        <button class="action-btn save-btn" bindtap="handleSaveChangesBill" data-index="{{index}}">保存修改</button>
+                        <button class="action-btn cancel-btn" bindtap="handleCancelEditBill" data-index="{{index}}">取消</button>
+                      </block>
+                      <block wx:else>
+                        <button wx:if="{{!item.alreadySaved}}" class="action-btn confirm-btn" bindtap="handleConfirmSaveBill" data-index="{{index}}">确认保存</button>
+                        <button class="action-btn edit-btn" bindtap="handleEditBill" data-index="{{index}}">修改</button>
+                        <text wx:if="{{item.alreadySaved}}" class="saved-status">✓ 已保存</text>
+                      </block>
+                    </view>
+                  </view>
+                </view>
+
+                <!-- Loading / Status Indicators for AI Message -->
+                <view wx:if="{{item.type === 'system' && item.isLoading && !item.isBill}}" class="loading-dots">
+                  <text>.</text><text>.</text><text>.</text>
+                </view>
+              </view> <!-- End .message-content -->
+
+              <!-- Status Indicators for User Message / General Error -->
+              <view wx:if="{{item.type === 'user' && item.uploading && !item.error}}" class="message-status user-status">发送中...</view>
+              <view wx:if="{{item.error && item.errorMessage}}" class="message-status error-status">{{item.errorMessage}}</view>
+              <view wx:elif="{{item.error && !item.errorMessage}}" class="message-status error-status">{{item.type === 'user' ? '发送失败' : '回复处理失败'}}</view>
+            </view> <!-- End .message-content-container -->
+          </view>
+        </view>
+      </block>
+      <view class="scroll-view-bottom-padding"></view> <!-- To ensure last message is not hidden by input area -->
+    </scroll-view>
+
+    <!-- Fixed Input Area at the bottom -->
+    <view class="chat-input-area-wrapper">
+      <view class="shared-input-area">
+        <textarea class="shared-message-input"
+                  value="{{inputMessage}}"
+                  bindinput="onInputChange"
+                  placeholder="跟小咩说点什么吧..."
+                  confirm-type="send"
+                  bindconfirm="sendTextMessage"
+                  auto-height
+                  maxlength="-1"
+                  show-confirm-bar="{{false}}"
+                  cursor-spacing="20"
+                  adjust-position="{{true}}"
+                  />
+        <view class="shared-input-buttons">
+          <image class="shared-upload-btn" src="/static/icons/uploadbutton.png" mode="aspectFit" bindtap="chooseImageAndSend"/>
+          <image class="shared-send-btn" src="/static/icons/arrow.png" mode="aspectFit" bindtap="sendTextMessage" />
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,68 @@
+<!--pages/ai-insight/ai-insight.wxml-->
+<view class="page-container">
+  <view class="header">
+    <text class="title">AI智能洞察</text>
+    <text class="subtitle">基于您的财务数据，由AI小咩为您提供专业分析</text>
+  </view>
+  
+  <!-- 时间周期选择 -->
+  <view class="period-selector">
+    <view class="period-item {{currentPeriod === 'monthly' ? 'active' : ''}}" bindtap="switchPeriod" data-period="monthly">
+      <text>月度洞察</text>
+    </view>
+    <view class="period-item {{currentPeriod === 'quarterly' ? 'active' : ''}}" bindtap="switchPeriod" data-period="quarterly">
+      <text>季度洞察</text>
+    </view>
+    <view class="period-item {{currentPeriod === 'yearly' ? 'active' : ''}}" bindtap="switchPeriod" data-period="yearly">
+      <text>年度洞察</text>
+    </view>
+  </view>
+
+  <!-- 日期选择器 -->
+  <view class="date-picker-container">
+    <view class="date-picker">
+      <picker mode="date" value="{{selectedDate}}" fields="{{datePickerFields}}" bindchange="onDateChange">
+        <view class="date-picker-btn">
+          <text class="date-text">{{dateDisplay}}</text>
+          <text class="date-arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+    <view class="refresh-btn" bindtap="refreshInsight">
+      <text class="refresh-icon">↻</text>
+      <text class="refresh-text">刷新</text>
+    </view>
+  </view>
+
+  <!-- AI分析结果展示区域 -->
+  <view class="insight-container">
+    <!-- 分析中的加载动画 -->
+    <view class="loading-container" wx:if="{{isLoading}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">小咩正在分析您的财务数据...</text>
+    </view>
+
+    <!-- 分析结果 -->
+    <view class="insight-content" wx:elif="{{insightContent}}">
+      <rich-text nodes="{{insightContent}}" space="nbsp"></rich-text>
+    </view>
+
+    <!-- 错误提示 -->
+    <view class="error-container" wx:elif="{{errorMessage}}">
+      <text class="error-text">{{errorMessage}}</text>
+      <button class="retry-btn" bindtap="getInsight">重试</button>
+    </view>
+
+    <!-- 提示信息 -->
+    <view class="empty-container" wx:else>
+      <text class="empty-text">请选择时间周期和日期，点击分析按钮获取AI洞察</text>
+    </view>
+  </view>
+
+  <!-- 分析按钮 -->
+  <view class="action-area">
+    <button class="analyze-btn" bindtap="getInsight" disabled="{{isLoading}}">
+      {{isLoading ? '分析中...' : '开始分析'}}
+    </button>
+  </view>
+</view>

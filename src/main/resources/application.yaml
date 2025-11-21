@@ -1,0 +1,107 @@
+# Spring Boot 通用配置
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  # 数据源配置 - 敏感信息从环境变量读取
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/ai_bill?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      max-lifetime: 600000
+      idle-timeout: 300000
+      keepalive-time: 60000
+      validation-timeout: 3000
+
+  # AI 配置
+  ai:
+    openai:
+      base-url: ${OPENAI_BASE_URL:https://api.openai.com}
+      api-key: ${OPENAI_API_KEY:}
+      read-timeout: 30
+      connect-timeout: 10
+      chat:
+        options:
+          model: ${OPENAI_MODEL:gpt-4}
+          temperature: 0.5
+
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  # Redis 配置
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+
+# JWT 配置
+jwt:
+  secret: ${JWT_SECRET:your-default-secret-key-change-in-production}
+  expiration:
+    ms: ${JWT_EXPIRATION_MS:604800000}  # 默认7天
+  header: Authorization
+  prefix: "Bearer "
+
+# 安全配置
+security:
+  interceptor:
+    jwt:
+      enabled: true
+
+# 微信小程序配置
+wechat:
+  appid: ${WECHAT_APPID:}
+  secret: ${WECHAT_SECRET:}
+
+# 汇率 API 配置
+rate-api:
+  url: ${RATE_API_URL:https://v2.xxapi.cn/api/exchange}
+  base-currency: CNY
+  target-currencies:
+    - USD
+    - EUR
+    - JPY
+    - GBP
+
+# 定时任务配置
+scheduler:
+  update-exchange-rates-cron: "0 0 3 * * ?"
+
+# 服务器配置
+server:
+  port: ${SERVER_PORT:8080}
+
+# 应用配置
+app:
+  pagination:
+    default-size: 10
+    max-size: 100
+  file:
+    allowed-image-types:
+      - jpg
+      - jpeg
+      - png
+      - gif
+      - bmp
+    allowed-document-types:
+      - pdf
+      - doc
+      - docx
+      - xls
+      - xlsx
+  cache:
+    expire-seconds: 3600
+
+# 七牛云配置
+qiniu:
+  access-key: ${QINIU_ACCESS_KEY:}
+  secret-key: ${QINIU_SECRET_KEY:}
+  bucket: ${QINIU_BUCKET:}
+  domain: ${QINIU_DOMAIN:}
+  use-https: ${QINIU_USE_HTTPS:true}

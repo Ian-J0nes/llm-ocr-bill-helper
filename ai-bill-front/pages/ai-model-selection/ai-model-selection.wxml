@@ -1,0 +1,33 @@
+<view class="container">
+  <view class="header">
+    <text class="title">选择AI模型</text>
+    <text class="subtitle">为您的应用选择最佳AI模型</text>
+  </view>
+
+  <view class="models-list">
+    <view class="model-item {{currentModel === item.modelName ? 'selected' : ''}}" 
+          wx:for="{{aiModels}}" 
+          wx:key="id"
+          data-model="{{item.modelName}}"
+          data-display-name="{{item.modelDisplayName}}"
+          bindtap="selectModel">
+      
+      <view class="model-info">
+        <text class="model-name">{{item.modelDisplayName || item.modelName}}</text>
+        <text class="model-desc">{{item.modelDescription}}</text>
+      </view>
+      
+      <view class="model-selected" wx:if="{{currentModel === item.modelName}}">
+        <text class="iconfont icon-check"></text>
+      </view>
+    </view>
+  </view>
+
+  <view class="no-models" wx:if="{{aiModels.length === 0}}">
+    <text>暂无可用AI模型</text>
+  </view>
+
+  <view class="footer">
+    <button class="cancel-btn" bindtap="cancel">返回</button>
+  </view>
+</view> 

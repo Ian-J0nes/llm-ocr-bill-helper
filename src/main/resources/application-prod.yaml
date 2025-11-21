@@ -1,0 +1,60 @@
+# 生产环境配置
+# 所有敏感信息必须通过环境变量注入
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      max-lifetime: 1800000
+      idle-timeout: 600000
+      maximum-pool-size: 20
+      minimum-idle: 5
+
+  ai:
+    openai:
+      base-url: ${OPENAI_BASE_URL}
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: ${OPENAI_MODEL:gpt-4}
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
+
+# JWT 配置 - 生产环境使用较短过期时间
+jwt:
+  secret: ${JWT_SECRET}
+  expiration:
+    ms: 604800000  # 7天
+
+# 微信小程序配置
+wechat:
+  appid: ${WECHAT_APPID}
+  secret: ${WECHAT_SECRET}
+
+# 七牛云配置
+qiniu:
+  access-key: ${QINIU_ACCESS_KEY}
+  secret-key: ${QINIU_SECRET_KEY}
+  bucket: ${QINIU_BUCKET}
+  domain: ${QINIU_DOMAIN}
+  use-https: true
+
+# 生产环境日志配置 - 只记录必要信息
+logging:
+  level:
+    root: WARN
+    org.springframework: WARN
+    org.springframework.security: WARN
+    org.maram.bill: INFO
+  file:
+    name: /var/log/ai-bill/application.log
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30

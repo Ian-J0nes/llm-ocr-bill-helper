@@ -1,0 +1,68 @@
+<view class="feedback-container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">意见反馈</text>
+    <text class="page-subtitle">您的建议对我们很重要</text>
+  </view>
+
+  <!-- 反馈表单 -->
+  <view class="feedback-form">
+    <!-- 反馈类型选择 -->
+    <view class="form-item">
+      <text class="form-label">反馈类型</text>
+      <picker 
+        mode="selector" 
+        range="{{typeOptions}}" 
+        value="{{selectedType}}" 
+        bindchange="onTypeChange"
+        class="type-picker"
+      >
+        <view class="picker-display">
+          <text>{{typeOptions[selectedType]}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 反馈内容 -->
+    <view class="form-item">
+      <text class="form-label">详细描述 <text class="required">*</text></text>
+      <textarea 
+        class="feedback-textarea"
+        placeholder="请详细描述您遇到的问题或建议，以便我们更好地为您服务"
+        placeholder-class="placeholder-style"
+        maxlength="500"
+        show-confirm-bar="{{false}}"
+        auto-height
+        bindinput="onContentInput"
+        value="{{feedbackContent}}"
+      />
+      <view class="char-count">{{feedbackContent.length}}/500</view>
+    </view>
+
+    <!-- 联系方式
+    <view class="form-item">
+      <text class="form-label">联系方式 <text class="optional">(选填)</text></text>
+      <input 
+        class="feedback-input"
+        placeholder="请留下您的微信号、手机号或邮箱"
+        placeholder-class="placeholder-style"
+        maxlength="50"
+        bindinput="onContactInput"
+        value="{{contactInfo}}"
+      />
+    </view> -->
+
+    <!-- 温馨提示 -->
+    <view class="tips">
+      <text class="tips-icon">💡</text>
+      <text class="tips-text">我们承诺保护您的隐私，联系方式仅用于反馈处理</text>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-actions">
+    <view class="cancel-btn" bindtap="cancelFeedback">取消</view>
+    <view class="submit-btn" bindtap="submitFeedback">提交反馈</view>
+  </view>
+</view> 

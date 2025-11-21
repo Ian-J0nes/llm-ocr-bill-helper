@@ -1,0 +1,48 @@
+# UAT/测试环境配置
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  ai:
+    openai:
+      base-url: ${OPENAI_BASE_URL}
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: ${OPENAI_MODEL:gpt-4}
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
+
+# JWT 配置
+jwt:
+  secret: ${JWT_SECRET}
+  expiration:
+    ms: 604800000  # 7天
+
+# 微信小程序配置
+wechat:
+  appid: ${WECHAT_APPID}
+  secret: ${WECHAT_SECRET}
+
+# 七牛云配置
+qiniu:
+  access-key: ${QINIU_ACCESS_KEY}
+  secret-key: ${QINIU_SECRET_KEY}
+  bucket: ${QINIU_BUCKET}
+  domain: ${QINIU_DOMAIN}
+  use-https: true
+
+# UAT 环境日志配置 - 比生产环境稍详细
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    org.springframework.security: INFO
+    org.maram.bill: DEBUG

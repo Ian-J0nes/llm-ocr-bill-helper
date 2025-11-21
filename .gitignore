@@ -1,0 +1,55 @@
+# ==================== 编译输出 ====================
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+*.war
+*.ear
+
+# ==================== IDE ====================
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*.swo
+*~
+
+# ==================== 敏感配置文件 ====================
+.env
+.env.*
+!.env.example
+application-dev-local.yaml
+application-local.yaml
+**/secrets/
+**/credentials/
+
+# ==================== 日志文件 ====================
+logs/
+*.log
+
+# ==================== 系统文件 ====================
+.DS_Store
+Thumbs.db
+
+# ==================== Maven ====================
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ==================== 测试输出 ====================
+/coverage/
+*.exec
+
+# ==================== 临时文件 ====================
+tmp/
+temp/
+*.tmp
+*.bak

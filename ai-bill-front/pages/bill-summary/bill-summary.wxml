@@ -1,0 +1,162 @@
+<!--pages/bill-summary/bill-summary.wxml-->
+<view class="container">
+  <!-- 月份选择器和总览 -->
+  <view class="summary-header">
+    <view class="month-selector">
+      <picker mode="selector" 
+              range="{{monthPickerRange}}" 
+              range-key="text" 
+              value="{{monthPickerIndex}}" 
+              bindchange="onMonthPickerChange">
+        <view class="month-text">{{currentYear}}年{{currentMonth}}月统计 📅</view>
+      </picker>
+      <text class="month-tip">点击选择月份</text>
+    </view>
+    <view class="summary-overview">
+      <view class="overview-item expense">
+        <text class="label">总支出</text>
+        <text class="amount">¥{{totalExpense}}</text>
+      </view>
+      <view class="overview-item income">
+        <text class="label">总收入</text>
+        <text class="amount">¥{{totalIncome}}</text>
+      </view>
+      <view class="overview-item balance">
+        <text class="label">结余</text>
+        <text class="amount {{balanceType}}">
+          ¥{{balance}}
+        </text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{isLoading}}" class="loading-container">
+    <text class="loading-text">正在加载统计数据...</text>
+  </view>
+
+  <!-- 图表内容 -->
+  <view wx:else class="charts-container">
+    <!-- 月度收支统计 (CSS 柱状图) -->
+    <view class="chart-section">
+      <view class="chart-title">月度收支统计</view>
+      <view class="bar-chart-container">
+        <view class="bar-chart-wrapper">
+          <!-- Y轴标签 -->
+          <view class="y-axis">
+            <view class="y-axis-label" wx:for="{{yAxisLabels}}" wx:key="index">
+              ¥{{item}}
+            </view>
+          </view>
+          <!-- 柱状图主体 -->
+          <view class="bars-container">
+            <view class="bar-item" wx:for="{{chartDays}}" wx:key="index" wx:if="{{item.show}}">
+              <view class="bar-group">
+                <!-- 收入柱 -->
+                <view class="bar bar-income" 
+                      style="height: {{item.incomeHeight}}%;"></view>
+                <!-- 支出柱 -->
+                <view class="bar bar-expense" 
+                      style="height: {{item.expenseHeight}}%;"></view>
+              </view>
+              <view class="bar-label">{{item.day}}日</view>
+            </view>
+          </view>
+        </view>
+        <!-- 图例 -->
+        <view class="legend">
+          <view class="legend-item">
+            <view class="legend-color legend-income"></view>
+            <text>收入</text>
+          </view>
+          <view class="legend-item">
+            <view class="legend-color legend-expense"></view>
+            <text>支出</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 分类占比 (CSS 饼图) -->
+    <view class="chart-section">
+      <view class="chart-title">分类占比</view>
+      <view class="pie-chart-controls">
+        <button bindtap="onPieChartTypeChange" data-type="expense" 
+                class="control-btn {{ pieChartType === 'expense' ? 'active' : '' }}">
+          支出分析
+        </button>
+        <button bindtap="onPieChartTypeChange" data-type="income" 
+                class="control-btn {{ pieChartType === 'income' ? 'active' : '' }}">
+          收入分析
+        </button>
+      </view>
+      
+      <!-- 饼图容器 -->
+      <view class="pie-chart-container">
+        <view class="pie-chart-wrapper">
+          <!-- 圆形图表 -->
+          <view class="pie-chart" style="background: conic-gradient({{pieChartGradient}});">
+            <view class="pie-chart-center">
+              <view class="pie-center-label">
+                {{ pieChartType === 'expense' ? '总支出' : '总收入' }}
+              </view>
+              <view class="pie-center-amount">
+                ¥{{ pieChartType === 'expense' ? totalExpense : totalIncome }}
+              </view>
+            </view>
+          </view>
+          
+          <!-- 图例 -->
+          <view class="pie-legend">
+            <view class="pie-legend-item" wx:for="{{currentCategoriesData}}" wx:key="name">
+              <view class="pie-legend-color" style="background-color: {{item.color}};"></view>
+              <view class="pie-legend-text">
+                <text class="pie-legend-name">{{item.name}}</text>
+                <text class="pie-legend-value">¥{{item.value}} ({{item.percentage}}%)</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 账单列表 -->
+    <view class="bill-list-section">
+      <view class="section-header">
+        <view class="section-title">账单明细</view>
+      </view>
+      
+      <view class="bill-list">
+        <view wx:if="{{!billsData || billsData.length === 0}}" class="no-data">
+          <text>暂无账单数据</text>
+        </view>
+        
+        <block wx:else>
+          <view wx:for="{{billsData}}" wx:key="id" class="bill-item">
+            <view class="bill-content" bindtap="onBillItemTap" data-id="{{item.id}}">
+              <view class="bill-left">
+                <view class="bill-type {{item.transactionType === 'expense' ? 'expense-type' : 'income-type'}}">
+                  {{item.billType || '其他'}}
+                </view>
+                <view class="bill-time">{{item.transactionDate || '未知日期'}}</view>
+              </view>
+              <view class="bill-right">
+                <view class="bill-amount {{item.transactionType === 'expense' ? 'expense-amount' : 'income-amount'}}">
+                  {{item.transactionType === 'expense' ? '-' : '+'}}¥{{item.totalAmount}}
+                </view>
+                <view class="bill-actions">
+                  <button class="action-btn edit-btn" bindtap="onEditBillTap" data-id="{{item.id}}">编辑</button>
+                </view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+      
+      <!-- 加载更多 -->
+      <view wx:if="{{billsData && billsData.length > 0}}" class="load-more">
+        <button class="load-more-btn" bindtap="loadMoreBills">查看更多</button>
+      </view>
+    </view>
+  </view>
+</view>

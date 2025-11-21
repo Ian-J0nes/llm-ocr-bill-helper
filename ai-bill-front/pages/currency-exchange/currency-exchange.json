@@ -1,0 +1,6 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "货币汇率",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#f5f5f5"
+}

@@ -1,0 +1,143 @@
+.container {
+    padding: 20px;
+    text-align: center;
+  }
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 20rpx; /* 上下40rpx，左右20rpx */
+  box-sizing: border-box;
+  /* 为底部tabBar留出空间，100rpx是tabBar高度，额外20rpx是间距 */
+  padding-bottom: calc(120rpx + env(safe-area-inset-bottom)); 
+}
+
+.user-info-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 50rpx;
+}
+
+.avatar-wrapper {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  overflow: hidden; /* 确保图片被裁剪为圆形 */
+  margin-bottom: 20rpx;
+  border: 2rpx solid #e0e0e0;
+  background-color: #f0f0f0; /* 添加一个背景色，以防图片加载失败或透明 */
+}
+
+/* 新增 .avatar-img 样式 */
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  display: block; /* 确保图片正确填充 */
+}
+
+.avatar-placeholder { /* 这是 WXML 中 wx:else 对应的类，确保有样式 */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #999;
+  text-align: center;
+}
+
+/* open-data type="userAvatarUrl" 会在内部渲染一个 image 标签，
+   微信小程序会自动处理其大小以适应父容器，我们只需保证父容器是期望的形状和大小 */
+
+.nickname {
+  font-size: 36rpx; /* 稍微增大昵称字号 */
+  color: #333333;
+  margin-top: 10rpx;
+}
+
+.menu-section {
+  width: 100%;
+  margin-top: 30rpx;
+}
+
+/* 为 .menu-item 添加样式，与 .menu-item-placeholder 类似 */
+.menu-item,
+.menu-item-placeholder {
+  background-color: #ffffff;
+  color: #555555;
+  padding: 30rpx 20rpx;
+  margin-bottom: 20rpx;
+  border-radius: 16rpx;
+  text-align: left;
+  font-size: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  border: 1rpx solid #f0f0f0;
+  display: flex; /* 使用 flex 可以在未来方便地添加图标等 */
+  align-items: center; /* 垂直居中文本（如果以后有图标） */
+}
+
+/* AI模型选择菜单样式 */
+.ai-model-item {
+  justify-content: space-between;
+}
+
+/* 预算菜单项样式 */
+.budget-item {
+  justify-content: space-between;
+}
+
+/* 警告文本样式 */
+.warn-text {
+  color: #ff6b6b !important;
+}
+
+.menu-item-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-item-name {
+  font-size: 30rpx;
+  color: #333333;
+}
+
+.menu-item-value {
+  font-size: 24rpx;
+  color: #999999;
+  margin-top: 8rpx;
+}
+
+.menu-item-arrow {
+  color: #999999;
+  font-size: 30rpx;
+}
+
+/* 如果希望菜单项有点击效果 */
+.menu-item:active {
+  background-color: #f9f9f9;
+}
+
+/* 底部选项样式 */
+.footer-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60rpx;
+  padding: 20rpx 0;
+}
+
+.footer-item {
+  color: #666666;
+  font-size: 28rpx;
+  padding: 10rpx 20rpx;
+}
+
+.divider {
+  width: 2rpx;
+  height: 24rpx;
+  background-color: #e0e0e0;
+  margin: 0 20rpx;
+}

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "AI智能洞察",
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "usingComponents": {},
+  "enablePullDownRefresh": true
+}

@@ -1,0 +1,57 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/chat/chat",
+    "pages/myset/myset",
+    "custom-tab-bar/index",
+    "pages/user-info/user-info",
+    "pages/currency-exchange/currency-exchange",
+    "pages/bill-summary/bill-summary",
+    "pages/bill-detail/bill-detail",
+    "pages/feedback/feedback",
+    "pages/ai-model-selection/ai-model-selection",
+    "pages/user-budget/user-budget",
+    "pages/ai-insight/ai-insight"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "小咩记账",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#8a8a8a",
+    "selectedColor": "#FF8C00",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/chat/chat",
+        "text": "对话"
+      },
+      {
+        "pagePath": "pages/myset/myset",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
+  "rendererOptions": {
+    "skyline": {
+      "defaultDisplayBlock": true,
+      "disableABTest": true
+    }
+  },
+  "optimization": {
+    "subPackages": true
+  }
+}

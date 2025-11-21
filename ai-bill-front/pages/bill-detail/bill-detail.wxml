@@ -1,0 +1,198 @@
+<view class="container">
+  <!-- 加载中状态 -->
+  <view class="loading-container" wx:if="{{isLoading}}">
+    <view class="loading-text">加载中...</view>
+  </view>
+
+  <!-- 账单详情内容 -->
+  <view class="bill-detail-container" wx:if="{{!isLoading && billDetail}}">
+    <!-- 显示模式 -->
+    <block wx:if="{{!isEditing}}">
+      <!-- 金额区域 -->
+      <view class="amount-section">
+        <view class="amount-label">{{billDetail.transactionType === 'expense' ? '支出' : '收入'}}</view>
+        <view class="amount-value {{billDetail.transactionType}}">
+          {{billDetail.transactionType === 'expense' ? '-' : '+'}}{{billDetail.totalAmount}}
+        </view>
+        <view class="currency">{{billDetail.currencyCode || 'CNY'}}</view>
+      </view>
+
+      <!-- 基本信息区域 -->
+      <view class="info-section">
+        <view class="info-title">账单信息</view>
+        
+        <view class="info-item">
+          <view class="info-label">账单名称</view>
+          <view class="info-value">{{billDetail.name || '无'}}</view>
+        </view>
+        
+        <view class="info-item">
+          <view class="info-label">账单类型</view>
+          <view class="info-value">{{billDetail.billType || '其他'}}</view>
+        </view>
+        
+        <view class="info-item">
+          <view class="info-label">交易日期</view>
+          <view class="info-value">{{billDetail.issueDate}}</view>
+        </view>
+        
+        <view class="info-item" wx:if="{{billDetail.supplierName}}">
+          <view class="info-label">{{billDetail.transactionType === 'expense' ? '收款方' : '付款方'}}</view>
+          <view class="info-value">{{billDetail.supplierName}}</view>
+        </view>
+        
+        <view class="info-item" wx:if="{{billDetail.invoiceNumber}}">
+          <view class="info-label">发票号码</view>
+          <view class="info-value">{{billDetail.invoiceNumber}}</view>
+        </view>
+        
+        <view class="info-item" wx:if="{{billDetail.taxAmount}}">
+          <view class="info-label">税额</view>
+          <view class="info-value">{{billDetail.taxAmount}}</view>
+        </view>
+        
+        <view class="info-item" wx:if="{{billDetail.notes}}">
+          <view class="info-label">备注</view>
+          <view class="info-value">{{billDetail.notes}}</view>
+        </view>
+      </view>
+
+      <!-- 票据图片区域 -->
+      <view class="image-section" wx:if="{{billImage.imageUrl}}">
+        <view class="image-title">票据图片</view>
+        <button 
+          class="view-image-btn" 
+          bindtap="previewImage" 
+          data-url="{{billImage.imageUrl}}"
+        >
+          <view class="btn-icon">👁️</view>
+          <view class="btn-text">查看票据图片</view>
+          <view class="image-info">
+            <text class="image-name">{{billImage.fileName}}</text>
+            <text class="image-size">{{billImage.fileSize}}</text>
+          </view>
+        </button>
+      </view>
+
+      <!-- 操作按钮区域 -->
+      <view class="action-section">
+        <button class="action-btn edit-btn" bindtap="onEditTap">编辑账单</button>
+        <button class="action-btn delete-btn" bindtap="deleteBill">删除账单</button>
+      </view>
+    </block>
+
+    <!-- 编辑模式 -->
+    <block wx:else>
+      <view class="edit-header">
+        <view class="edit-title">编辑账单</view>
+      </view>
+
+      <view class="edit-form">
+        <!-- 交易类型选择 -->
+        <view class="form-item">
+          <view class="form-label">交易类型</view>
+          <view class="form-input">
+            <picker mode="selector" range="{{transactionTypeOptions}}" range-key="name" 
+                    value="{{billDetailEditable.transactionType === 'expense' ? 0 : 1}}" 
+                    bindchange="onTransactionTypeChange">
+              <view class="picker-value {{billDetailEditable.transactionType === 'expense' ? 'expense' : 'income'}}">
+                {{billDetailEditable.transactionType === 'expense' ? '支出' : '收入'}}
+                <text class="picker-arrow">▼</text>
+              </view>
+            </picker>
+          </view>
+        </view>
+        
+        <!-- 金额 -->
+        <view class="form-item">
+          <view class="form-label">金额</view>
+          <view class="form-input">
+            <input class="input-field" type="digit" value="{{billDetailEditable.totalAmount}}" bindinput="onAmountInput" placeholder="请输入金额"/>
+          </view>
+        </view>
+        
+        <!-- 账单名称 -->
+        <view class="form-item">
+          <view class="form-label">账单名称</view>
+          <view class="form-input">
+            <input class="input-field" value="{{billDetailEditable.name}}" bindinput="onNameInput" placeholder="请输入名称"/>
+          </view>
+        </view>
+        
+        <!-- 账单类型 -->
+        <view class="form-item">
+          <view class="form-label">账单类型</view>
+          <view class="form-input">
+            <picker mode="selector" range="{{billTypeOptions}}" 
+                    value="{{billTypeOptions.indexOf(billDetailEditable.billType)}}" 
+                    bindchange="onBillTypeChange">
+              <view class="picker-value">
+                {{billDetailEditable.billType || '请选择类型'}}
+                <text class="picker-arrow">▼</text>
+              </view>
+            </picker>
+          </view>
+        </view>
+        
+        <!-- 交易日期 -->
+        <view class="form-item">
+          <view class="form-label">交易日期</view>
+          <view class="form-input">
+            <picker mode="date" value="{{datePickerValue}}" start="2000-01-01" end="{{today}}" bindchange="onDateChange">
+              <view class="picker-value">
+                {{billDetailEditable.issueDate || '请选择日期'}}
+                <text class="picker-arrow">▼</text>
+              </view>
+            </picker>
+          </view>
+        </view>
+        
+        <!-- 收款方/付款方 -->
+        <view class="form-item">
+          <view class="form-label">{{billDetailEditable.transactionType === 'expense' ? '收款方' : '付款方'}}</view>
+          <view class="form-input">
+            <input class="input-field" value="{{billDetailEditable.supplierName}}" bindinput="onSupplierInput" placeholder="请输入名称（选填）"/>
+          </view>
+        </view>
+        
+        <!-- 发票号码 -->
+        <view class="form-item">
+          <view class="form-label">发票号码</view>
+          <view class="form-input">
+            <input class="input-field" value="{{billDetailEditable.invoiceNumber}}" bindinput="onInvoiceNumberInput" placeholder="请输入发票号（选填）"/>
+          </view>
+        </view>
+        
+        <!-- 税额 -->
+        <view class="form-item">
+          <view class="form-label">税额</view>
+          <view class="form-input">
+            <input class="input-field" type="digit" value="{{billDetailEditable.taxAmount}}" bindinput="onTaxInput" placeholder="请输入税额（选填）"/>
+          </view>
+        </view>
+        
+        <!-- 备注 -->
+        <view class="form-item form-item-textarea">
+          <view class="form-label">备注</view>
+          <view class="form-input">
+            <textarea class="textarea-field" value="{{billDetailEditable.notes}}" bindinput="onNotesInput" placeholder="请输入备注（选填）" maxlength="200"/>
+          </view>
+        </view>
+      </view>
+
+      <!-- 编辑模式底部按钮 -->
+      <view class="edit-action-section">
+        <button class="action-btn cancel-btn" bindtap="cancelEdit" disabled="{{isSubmitting}}">取消</button>
+        <button class="action-btn save-btn" bindtap="saveEdit" disabled="{{isSubmitting}}">
+          {{isSubmitting ? '保存中...' : '保存'}}
+        </button>
+      </view>
+    </block>
+  </view>
+
+  <!-- 错误状态 -->
+  <view class="error-container" wx:if="{{!isLoading && !billDetail}}">
+    <view class="error-text">账单信息加载失败</view>
+    <button class="retry-btn" bindtap="loadBillDetail">重试</button>
+  </view>
+</view> 

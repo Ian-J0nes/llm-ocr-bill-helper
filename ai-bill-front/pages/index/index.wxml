@@ -1,0 +1,88 @@
+<view class="container">
+  <!-- 顶部月份和切换按钮区域 -->
+  <view class="top-actions">
+    <!-- 修改月份选择器为 picker -->
+    <picker mode="selector" range="{{monthPickerRange}}" range-key="text" bindchange="onMonthPickerChange">
+      <view class="month-selector">
+        <text>{{currentYear}}年{{currentMonth}}月</text>
+        <image class="down-arrow" src="/static/icons/downselect.png" mode="aspectFit"></image>
+      </view>
+    </picker>
+    <!-- 月份选择器结束 -->
+    <view class="toggle-view" bindtap="toggleViewMode">
+      <image src="/static/icons/exchange.png" mode="aspectFit"></image>
+    </view>
+  </view>
+
+  <!-- 对角线设计统计区域 - 默认显示 -->
+  <view class="summary-container diagonal-design" wx:if="{{showDiagonalView}}">
+    <!-- 对角线 -->
+    <view class="diagonal-line"></view>
+    
+    <!-- 左上角支出区域 -->
+    <view class="expense-section">
+      <view class="expense-label">支</view>
+      <view class="expense-amount">{{monthSummary.totalExpense}}</view>
+    </view>
+    
+    <!-- 右下角收入区域 -->
+    <view class="income-section">
+      <view class="income-label">收</view>
+      <view class="income-amount">{{monthSummary.totalIncome}}</view>
+    </view>
+  </view>
+
+  <!-- 总计设计统计区域 - 切换后显示 -->
+  <view class="summary-container total-design" wx:else>
+    <!-- 三个区域：收入、支出、总计 -->
+    <view class="summary-row">
+      <view class="summary-item">
+        <view class="item-label">收入</view>
+        <view class="item-amount income-color">{{monthSummary.totalIncome}}</view>
+      </view>
+      
+      <view class="summary-item">
+        <view class="item-label">支出</view>
+        <view class="item-amount expense-color">{{monthSummary.totalExpense}}</view>
+      </view>
+    </view>
+    
+    <view class="divider"></view>
+    
+    <!-- 总计区域 -->
+    <view class="total-section">
+      <view class="total-label">总计</view>
+      <view class="total-amount {{monthSummary.totalIncome - monthSummary.totalExpense >= 0 ? 'positive' : 'negative'}}">
+        {{monthSummary.totalIncome - monthSummary.totalExpense}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 账单列表区域 -->
+  <view class="bill-list-container">
+    <!-- 按日期分组的账单 -->
+    <view class="bill-date-group" wx:for="{{billGroups}}" wx:key="date" wx:for-item="group">
+      <view class="date-header">
+        <view class="date-info">
+          <text class="date-day">{{group.dayLabel}}</text>
+          <text class="date-full">{{group.date}}</text>
+        </view>
+        <view class="date-summary">
+          <text>支出：</text>
+          <text class="expense">{{group.expense}}</text>
+          <text>收入：</text>
+          <text class="income">{{group.income}}</text>
+        </view>
+      </view>
+      
+      <!-- 当天的账单明细 -->
+      <view class="bill-item" wx:for="{{group.bills}}" wx:key="id" bindtap="navigateToBillDetail" data-id="{{item.id}}">
+        <view class="bill-info">
+          <view class="bill-category">{{item.category}}</view>
+          <view class="bill-desc">{{item.description}}</view>
+        </view>
+        <view class="bill-amount {{item.type}}">{{item.amount}}</view>
+      </view>
+    </view>
+  </view>
+</view>

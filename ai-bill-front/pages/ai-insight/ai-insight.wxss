@@ -1,0 +1,202 @@
+/* pages/ai-insight/ai-insight.wxss */
+.page-container {
+  padding: 20rpx;
+  box-sizing: border-box;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.subtitle {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.period-selector {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f5f5f5;
+  border-radius: 10rpx;
+  padding: 5rpx;
+  margin: 20rpx 0;
+}
+
+.period-item {
+  flex: 1;
+  padding: 15rpx 0;
+  text-align: center;
+  font-size: 28rpx;
+  color: #666;
+  border-radius: 8rpx;
+  transition: all 0.3s;
+}
+
+.period-item.active {
+  background-color: #4CAF50;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* 日期选择器容器，包含日期选择器和刷新按钮 */
+.date-picker-container {
+  width: 100%;
+  margin: 20rpx 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.date-picker {
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.date-picker-btn {
+  background-color: #f5f5f5;
+  padding: 20rpx;
+  border-radius: 8rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.date-text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.date-arrow {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 刷新按钮样式 */
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 10rpx 20rpx;
+  border-radius: 8rpx;
+  border: 1px solid #e0e0e0;
+}
+
+.refresh-btn:active {
+  background-color: #e0e0e0;
+}
+
+.refresh-icon {
+  font-size: 32rpx;
+  color: #4CAF50;
+  margin-right: 6rpx;
+}
+
+.refresh-text {
+  font-size: 24rpx;
+  color: #4CAF50;
+}
+
+.insight-container {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  margin: 20rpx 0;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+}
+
+.loading-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-spinner {
+  width: 80rpx;
+  height: 80rpx;
+  border: 6rpx solid #f3f3f3;
+  border-top: 6rpx solid #4CAF50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 30rpx;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: #666;
+  font-size: 28rpx;
+}
+
+.insight-content {
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: #333;
+}
+
+.error-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.error-text {
+  color: #ff6b6b;
+  font-size: 28rpx;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.retry-btn {
+  background-color: #4CAF50;
+  color: white;
+  font-size: 28rpx;
+  padding: 10rpx 40rpx;
+  border-radius: 30rpx;
+}
+
+.empty-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.empty-text {
+  color: #999;
+  font-size: 28rpx;
+  text-align: center;
+  padding: 0 30rpx;
+}
+
+.action-area {
+  padding: 20rpx 0;
+}
+
+.analyze-btn {
+  background-color: #4CAF50;
+  color: white;
+  font-size: 32rpx;
+  border-radius: 40rpx;
+}

@@ -1,0 +1,400 @@
+/* 整体容器样式 */
+.container {
+  padding: 0;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative; /* 为了给添加按钮定位 */
+}
+
+/* 顶部操作区域样式 */
+.top-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* 顶部月份选择器样式 */
+.month-selector {
+  padding: 0 10rpx;
+  display: flex;
+  justify-content: flex-start; /* 左对齐 */
+  align-items: center;
+  font-size: 34rpx;
+  font-weight: bold; /* 字体加粗 */
+  color: #333;
+}
+
+/* 月份显示区域样式 */
+.month-display {
+  display: flex;
+  align-items: center;
+  font-size: 34rpx;
+  font-weight: 500;
+  color: #333;
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  background-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 下拉箭头样式 */
+.down-arrow {
+  width: 20rpx;
+  height: 20rpx;
+  margin-left: 10rpx;
+}
+
+/* 视图切换按钮样式 */
+.toggle-view {
+  width: 40rpx;
+  height: 40rpx;
+  padding: 10rpx;
+}
+
+.toggle-view image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 顶部统计区域容器基础样式 */
+.summary-container {
+  color: white;
+  border-radius: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+  margin: 10rpx; /* 四周留出10rpx（约5px）间距 */
+  width: calc(100% - 20rpx); /* 宽度计算为100%减去两边的margin */
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* 对角线设计样式 */
+.diagonal-design {
+  background: linear-gradient(135deg, rgb(0, 0, 0), rgb(255, 255, 255));
+  height: 200rpx; /* 固定高度 */
+  position: relative; /* 为定位对角线和内容 */
+  padding: 0;
+}
+
+/* 对角线样式 */
+.diagonal-line {
+  position: absolute;
+  height: 2rpx; /* 线的宽度 */
+  background-color: rgba(255, 255, 255, 0.3); /* 半透明白色 */
+  width: 140%; /* 确保足够长以覆盖容器 */
+  top: 50%;
+  left: -20%;
+  transform: rotate(-45deg); /* 旋转形成对角线 */
+  z-index: 1; /* 确保在内容下方 */
+}
+
+/* 支出区域样式 - 左上角 */
+.expense-section {
+  position: absolute;
+  top: 20rpx;
+  left: 30rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 2;
+}
+
+/* 支出标签样式 */
+.expense-label {
+  font-size: 40rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 支出金额样式 */
+.expense-amount {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: white;
+}
+
+/* 收入区域样式 - 右下角 */
+.income-section {
+  position: absolute;
+  bottom: 20rpx;
+  right: 30rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 2;
+}
+
+/* 收入标签样式 */
+.income-label {
+  font-size: 40rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+/* 收入金额样式 */
+.income-amount {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: black;
+}
+
+/* 总计设计样式 */
+.total-design {
+  background: linear-gradient(to bottom, #ffffff, #f8f8f8);
+  padding: 30rpx;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.08), inset 0 -5rpx 10rpx rgba(0, 0, 0, 0.03);
+  position: relative;
+}
+
+/* 添加额外的边框效果增加深度感 */
+.total-design::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 30rpx;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+}
+
+/* 收支行样式 */
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+/* 收支项目样式 */
+.summary-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 项目标签样式 */
+.item-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+/* 项目金额样式 */
+.item-amount {
+  font-size: 40rpx;
+  font-weight: bold;
+}
+
+/* 收入颜色 */
+.income-color {
+  color: #27ae60;
+}
+
+/* 支出颜色 */
+.expense-color {
+  color: #e74c3c;
+}
+
+/* 分隔线样式 */
+.divider {
+  height: 2rpx;
+  background-color: #f0f0f0;
+  width: 100%;
+  margin: 10rpx 0 30rpx;
+}
+
+/* 总计区域样式 */
+.total-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 总计标签样式 */
+.total-label {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+/* 总计金额样式 */
+.total-amount {
+  font-size: 48rpx;
+  font-weight: bold;
+}
+
+/* 正数总计样式 */
+.total-amount.positive {
+  color: #27ae60;
+}
+
+/* 负数总计样式 */
+.total-amount.negative {
+  color: #e74c3c;
+}
+
+/* 账单列表区域样式 */
+.bill-list-container {
+  flex: 1;
+  padding: 0 10rpx 120rpx; 
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* 账单列表头部样式 */
+.bill-list-header {
+  font-size: 32rpx;
+  font-weight: 500;
+  margin-bottom: 30rpx;
+  color: #333;
+}
+
+/* 按日期分组的账单样式 */
+.bill-date-group {
+  background-color: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: 30rpx;
+  overflow: hidden;
+  width: 100%; 
+}
+
+/* 日期头部样式 */
+.date-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background-color: #f9f9f9;
+  border-bottom: 1rpx solid #eee;
+}
+
+/* 日期信息容器样式 */
+.date-info {
+  display: flex;
+  align-items: center;
+}
+
+/* 日期天数样式 */
+.date-day {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-right: 15rpx;
+}
+
+/* 完整日期样式 */
+.date-full {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 日期收支汇总样式 */
+.date-summary {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 支出金额字体颜色样式 */
+.expense {
+  color: #e74c3c;
+  margin-right: 20rpx;
+}
+
+/* 收入金额字体颜色样式 - 明细列表中 */
+.income {
+  color: #27ae60;
+}
+
+/* 账单明细项样式 */
+.bill-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+/* 最后一个账单项样式 */
+.bill-item:last-child {
+  border-bottom: none;
+}
+
+/* 账单项点击效果样式 */
+.bill-item:active {
+  background-color: #f9f9f9;
+}
+
+/* 账单信息区域样式 */
+.bill-info {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 账单类别文本样式 */
+.bill-category {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+/* 账单描述文本样式 */
+.bill-desc {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 账单金额样式 */
+.bill-amount {
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+/* 账单支出金额样式 */
+.bill-amount.expense {
+  color: #e74c3c;
+}
+
+/* 账单收入金额样式 */
+.bill-amount.income {
+  color: #27ae60;
+}
+
+/* 添加账单按钮样式 */
+.add-bill-btn {
+  position: fixed;
+  bottom: 40rpx;
+  right: 40rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: linear-gradient(135deg, #2c3e50, #1a1a1a);
+  color: #fff;
+  font-size: 60rpx;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+/* 添加账单按钮点击效果样式 */
+.add-bill-btn:active {
+  transform: scale(0.95);
+  background: linear-gradient(135deg, #1a1a1a, #2c3e50);
+}
